@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script>
+        function storeData(event) {
+            event.preventDefault(); 
+
+            let editIndex = sessionStorage.getItem('editIndex');
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+
+            let name = document.getElementById('name').value;
+            let age = document.getElementById('age').value;
+            let phone = document.getElementById('phone').value;
+            let email = document.getElementById('email').value;
+            let course = document.getElementById('course').value;
+            let place = document.getElementById('place').value;
+
+            if (!name || !age || !phone || !email || !course || !place) {
+                alert("All fields are required.");
+                return; 
+            }
+
+
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            if (!email.match(emailPattern)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            let student = {
+                name: name,
+                age: age,
+                phone: phone,
+                email: email,
+                course: course,
+                place: place
+            };
+
+            if (editIndex !== null) {
+                students[editIndex] = student;  
+                sessionStorage.removeItem('editIndex');  
+            } else {
+                students.push(student);
+            }
+
+            localStorage.setItem('students', JSON.stringify(students));
+
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('course').value = '';
+            document.getElementById('place').value = '';
+
+            alert("Student data saved successfully.");
+
+            window.location.href = 'view.html';
+        }
+
+        function populateForm() {
+            let editIndex = sessionStorage.getItem('editIndex');
+            if (editIndex !== null) {
+                let students = JSON.parse(localStorage.getItem('students')) || [];
+                let student = students[editIndex];
+
+                document.getElementById('name').value = student.name;
+                document.getElementById('age').value = student.age;
+                document.getElementById('phone').value = student.phone;
+                document.getElementById('email').value = student.email;
+                document.getElementById('course').value = student.course;
+                document.getElementById('place').value = student.place;
+            }
+        }
+        function viewRegistration() {
+           window.location.href = 'view.html';
+        }
+        function clearAll(){
+
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('course').value = '';
+            document.getElementById('place').value = '';
+        }
+
+        window.onload = populateForm;
+    </script>
+    <style>
+        label{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body style="background-image: url(./bg2.avif); background-repeat: no-repeat; background-size: cover;">
+    <div class="d-flex align-items-center justify-content-center mt-3">
+        <form onsubmit="storeData(event)" class="p-4 border rounded shadow-sm" style="backdrop-filter: 10;">
+            <h1 class="mb-4 text-center" style="color: rgb(38, 61, 4);">Students Registration</h1>
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" placeholder="Enter Student Name Here " id="name" name="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="age" class="form-label">Age:</label>
+                <input type="number" placeholder="Enter Student Age Here" id="age" name="age" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone:</label>
+                <input type="number" placeholder="Enter Phone Number Here" id="phone" name="phone" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" placeholder="Enter E-mail Here" id="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="course" class="form-label">Choose a course:</label>
+                <select id="course" name="course" class="form-select" required>
+                    <option value="select" disabled selected>Select a course</option>
+                    <option value="mearn-stack">ME(A)RN Stack</option>
+                    <option value="software-testing">Software Testing</option>
+                    <option value="python-django">Python Django</option>
+                    <option value="flutter">Flutter</option>
+                    <option value="asp-net">ASP.NET</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="place" class="form-label">Place:</label>
+                <input type="text" placeholder="Enter Place Here" id="place" name="place" class="form-control" required>
+            </div>
+
+            <div class="d-flex justify-content-between">
+               <div>
+                    <button type="save" class="btn btn-primary">Save</button>
+                    <button type="clear" class="btn btn-warning" onclick="clearAll()">Clear</button>
+               </div>
+                <button type="button" class="btn btn-secondary" onclick="viewRegistration()">View Students</button>
+                
+            </div>
+        </form>
+    </div>
+</body>
+</html>
